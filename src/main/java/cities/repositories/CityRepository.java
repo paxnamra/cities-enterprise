@@ -1,6 +1,6 @@
 package cities.repositories;
 
-import cities.model.City;
+import cities.models.City;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 @Repository

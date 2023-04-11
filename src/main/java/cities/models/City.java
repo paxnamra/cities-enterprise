@@ -1,4 +1,4 @@
-package cities.model;
+package cities.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

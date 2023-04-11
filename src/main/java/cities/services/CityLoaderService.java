@@ -1,8 +1,7 @@
 package cities.services;
 
-import cities.model.City;
+import cities.models.City;
 import cities.repositories.CityRepository;
-import cities.services.exceptions.CitiesNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +38,7 @@ public class CityLoaderService {
             repository.saveAll(cities);
 
         } catch (IOException errorMessage) {
-            throw new CitiesNotFoundException("Missing file to load with cities under given path.", errorMessage);
+            System.err.println("Missing cities file under given filepath: " + errorMessage.getMessage());
         }
     }
 }
