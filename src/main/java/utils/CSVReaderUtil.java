@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVReaderUtil {
-    public static List<City> readCSV(String filePath) {
+    public static List<City> readCSV(String filePath) throws IOException {
         List<City> cities = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))) {
@@ -27,8 +27,6 @@ public class CSVReaderUtil {
                 City city = new City(id, name, imageLink);
                 cities.add(city);
             }
-        } catch (IOException errorMessage) {
-            System.err.println("Missing cities file or wrong file under given filepath: " + errorMessage.getMessage());
         }
 
         return cities;
