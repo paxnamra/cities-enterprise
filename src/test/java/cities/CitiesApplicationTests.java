@@ -12,9 +12,4 @@ class CitiesApplicationTests {
         CitiesApplication classUnderTest = new CitiesApplication();
         assertNotNull(classUnderTest.printWhenSpringStart(), "Spring Application has just started!");
     }
-
-    @Test
-    void contextLoads() {
-    }
-
 }
