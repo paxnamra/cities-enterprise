@@ -1,7 +1,7 @@
 package cities.controllers;
 
 import cities.models.City;
-import cities.repositories.CityRepository;
+import cities.services.CityService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,10 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CityControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
-    CityRepository repository;
+    private CityService cityService;
 
     private List<City> cities;
 
@@ -47,7 +47,7 @@ class CityControllerTest {
                 new City(3L, "Los Angeles", "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Wiki_training_0226.jpg/500px-Wiki_training_0226.jpg")
         ));
 
-        when(repository.findAll()).thenReturn(cities);
+        when(cityService.extractCities()).thenReturn(cities);
 
         mockMvc.perform(get("/api/cities"))
                 .andExpect(status().isOk())

@@ -1,7 +1,7 @@
 package cities.controllers;
 
 import cities.models.City;
-import cities.repositories.CityRepository;
+import cities.services.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +16,11 @@ import java.util.List;
 public class CityController {
 
     @Autowired
-    private CityRepository repository;
+    private CityService cityService;
 
     @GetMapping
     public ResponseEntity<List<City>> getAllCities() {
-        List<City> cities = (List<City>) repository.findAll();
+        List<City> cities = cityService.extractCities();
         return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 }
