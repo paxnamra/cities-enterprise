@@ -4,6 +4,7 @@ import cities.models.City;
 import cities.services.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,10 +27,10 @@ public class CityController {
         return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 
-    @GetMapping("/{pathName}")
-    public ResponseEntity<City> getCityByName(@PathVariable String pathName) {
-        Optional<City> optionalCity = cityService.getCityByName(pathName);
-        return optionalCity.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    @GetMapping("/{cityName}")
+    public ResponseEntity<City> getCityByName(@PathVariable String cityName) {
+        Optional<City> optionalCity = cityService.getCityByName(cityName);
+        return optionalCity.map(city -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(city))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).build());
     }
 }
