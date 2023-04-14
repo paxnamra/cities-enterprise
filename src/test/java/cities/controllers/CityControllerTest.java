@@ -2,6 +2,7 @@ package cities.controllers;
 
 import cities.models.City;
 import cities.services.CityService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
@@ -37,16 +39,21 @@ class CityControllerTest {
     @BeforeEach
     public void setup() {
         cities = new ArrayList<>();
-    }
 
-    @Test
-    public void getAllCities_returnsCitiesListWith3Items() throws Exception {
         cities.addAll(List.of(
                 new City(1L, "Wrocław", "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Wroclaw-Rathaus.jpg/499px-Wroclaw-Rathaus.jpg"),
                 new City(2L, "Tokyo", "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Skyscrapers_of_Shinjuku_2009_January.jpg/500px-Skyscrapers_of_Shinjuku_2009_January.jpg"),
                 new City(3L, "Los Angeles", "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Wiki_training_0226.jpg/500px-Wiki_training_0226.jpg")
         ));
+    }
 
+    @AfterEach
+    public void clear() {
+        cities.clear();
+    }
+
+    @Test
+    public void getAllCities_returnsCitiesListWith3Items() throws Exception {
         when(cityService.extractCities()).thenReturn(cities);
 
         mockMvc.perform(get("/api/cities"))
@@ -56,5 +63,30 @@ class CityControllerTest {
                 .andExpect(jsonPath("$[0].id").value(cities.get(0).getId()))
                 .andExpect(jsonPath("$[0].name").value(cities.get(0).getName()))
                 .andExpect(jsonPath("$[0].imageLink").value(cities.get(0).getImageLink()));
+    }
+
+    @Test
+    public void getCityByName_returnsRequestedCity() throws Exception {
+        City city = cities.get(1);
+        String tokyo = city.getName();
+
+        when(cityService.getCityByName(tokyo)).thenReturn(Optional.of(city));
+
+        mockMvc.perform(get("/api/cities/{cityName}", city.getName()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(city.getId()))
+                .andExpect(jsonPath("$.name").value(city.getName()))
+                .andExpect(jsonPath("$.imageLink").value(city.getImageLink()));
+    }
+
+    @Test
+    public void getCityByName_returnsNotFoundStatus() throws Exception {
+        String cityName = "San Escobar";
+        when(cityService.getCityByName(cityName)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/cities/{pathName}", cityName))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }
