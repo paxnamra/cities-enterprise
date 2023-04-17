@@ -53,8 +53,8 @@ class CityControllerTest {
     }
 
     @Test
-    public void getAllCities_returnsCitiesListWith3Items() throws Exception {
-        when(cityService.extractCities()).thenReturn(cities);
+    public void getCities_returnsCitiesListWith3Items() throws Exception {
+        when(cityService.getAllCities()).thenReturn(cities);
 
         mockMvc.perform(get("/api/cities"))
                 .andExpect(status().isOk())
@@ -66,7 +66,7 @@ class CityControllerTest {
     }
 
     @Test
-    public void getCityByName_returnsRequestedCity() throws Exception {
+    public void getCity_returnsRequestedCity() throws Exception {
         City city = cities.get(1);
         String tokyo = city.getName();
 
@@ -81,7 +81,7 @@ class CityControllerTest {
     }
 
     @Test
-    public void getCityByName_returnsNotFoundStatus() throws Exception {
+    public void getCity_returnsNotFoundStatus() throws Exception {
         String cityName = "San Escobar";
         when(cityService.getCityByName(cityName)).thenReturn(Optional.empty());
 

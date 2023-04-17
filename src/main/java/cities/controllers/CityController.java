@@ -20,13 +20,13 @@ public class CityController {
     private CityService cityService;
 
     @GetMapping
-    public ResponseEntity<List<City>> getAllCities() {
-        List<City> cities = cityService.extractCities();
+    public ResponseEntity<List<City>> getCities() {
+        List<City> cities = cityService.getAllCities();
         return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 
     @GetMapping("/{cityName}")
-    public ResponseEntity<City> getCityByName(@PathVariable @NonNull String cityName) {
+    public ResponseEntity<City> getCity(@PathVariable @NonNull String cityName) {
         Optional<City> optionalCity = cityService.getCityByName(cityName);
         return optionalCity.map(city -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(city))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).build());

@@ -17,27 +17,27 @@ public class CityService {
     @Autowired
     private CityRepository repository;
 
-    public List<City> extractCities() {
+    public List<City> getAllCities() {
         return (List<City>) repository.findAll();
     }
 
     public Optional<City> getCityByName(String name) {
-        return repository.findCityByName(titleCasePath(name));
+        return repository.findCityByName(toTitleCase(name));
     }
 
-    public City updateCityNameAndImage(String cityName, City editCity) {
+    public City updateCityNameAndImage(String cityName, City newCityData) {
         Optional<City> optionalCity = getCityByName(cityName);
 
         if (optionalCity.isPresent()) {
             City cityToEdit = optionalCity.get();
-            City newCity = new City(cityToEdit.getId(), titleCasePath(editCity.getName()), editCity.getImageLink());
-            return repository.save(newCity);
+            City editedCity = new City(cityToEdit.getId(), toTitleCase(newCityData.getName()), newCityData.getImageLink());
+            return repository.save(editedCity);
         } else {
             throw new NoSuchElementException("City not found");
         }
     }
 
-    private String titleCasePath(String pathVariable) {
+    private String toTitleCase(String pathVariable) {
         return Arrays.stream(pathVariable.split("\\s+"))
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
