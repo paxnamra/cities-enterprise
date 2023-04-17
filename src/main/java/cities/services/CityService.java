@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,18 @@ public class CityService {
 
     public Optional<City> getCityByName(String name) {
         return repository.findCityByName(titleCasePath(name));
+    }
+
+    public City updateCityNameAndImage(String cityName, City editCity) {
+        Optional<City> optionalCity = getCityByName(cityName);
+
+        if (optionalCity.isPresent()) {
+            City cityToEdit = optionalCity.get();
+            City newCity = new City(cityToEdit.getId(), titleCasePath(editCity.getName()), editCity.getImageLink());
+            return repository.save(newCity);
+        } else {
+            throw new NoSuchElementException("City not found");
+        }
     }
 
     private String titleCasePath(String pathVariable) {
