@@ -3,13 +3,14 @@ package cities.controllers;
 import cities.models.City;
 import cities.services.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,8 +21,11 @@ public class CityController {
     private CityService cityService;
 
     @GetMapping
-    public ResponseEntity<List<City>> getCities() {
-        List<City> cities = cityService.getAllCities();
+    public ResponseEntity<Page<City>> getCities(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                                @RequestParam(required = false, defaultValue = "10") Integer size) {
+
+        Page<City> cities = cityService.getAllCities(PageRequest.of(page, size));
+
         return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 

@@ -2,6 +2,7 @@ package cities.controllers;
 
 import cities.models.City;
 import cities.services.CityService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -57,15 +60,19 @@ class CityControllerTest {
 
     @Test
     public void getCities_returnsCitiesListWith3Items() throws Exception {
-        when(cityService.getAllCities()).thenReturn(cities);
+        String pageMapper = new ObjectMapper().writeValueAsString(new PageImpl<>(cities, PageRequest.of(0, 10), cities.size()));
+        PageImpl<City> citiesPage = new PageImpl<>(cities, PageRequest.of(0, 10), cities.size());
 
-        mockMvc.perform(get("/api/cities"))
+        when(cityService.getAllCities(any())).thenReturn(citiesPage);
+
+        mockMvc.perform(get("/api/cities?page=0&size=10")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].id").value(cities.get(0).getId()))
-                .andExpect(jsonPath("$[0].name").value(cities.get(0).getName()))
-                .andExpect(jsonPath("$[0].imageLink").value(cities.get(0).getImageLink()));
+                .andExpect(content().json(pageMapper))
+                .andExpect(jsonPath("$.totalElements").value(3))
+                .andExpect(jsonPath("$.content[0].id").value(cities.get(0).getId()))
+                .andExpect(jsonPath("$.content[0].name").value(cities.get(0).getName()))
+                .andExpect(jsonPath("$.content[0].imageLink").value(cities.get(0).getImageLink()));
     }
 
     @Test

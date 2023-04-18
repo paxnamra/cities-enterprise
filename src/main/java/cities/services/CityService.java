@@ -3,6 +3,9 @@ package cities.services;
 import cities.models.City;
 import cities.repositories.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -17,8 +20,8 @@ public class CityService {
     @Autowired
     private CityRepository repository;
 
-    public List<City> getAllCities() {
-        return (List<City>) repository.findAll();
+    public Page<City> getAllCities(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public Optional<City> getCityByName(String name) {
