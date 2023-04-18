@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,8 +17,8 @@ public class CityService {
     @Autowired
     private CityRepository repository;
 
-    public Page<City> getAllCities(Pageable pageable) {
-        return repository.findAll(pageable);
+    public List<City> getAllCities(Integer page, Integer size) {
+        return pageAsList(page, size);
     }
 
     public Optional<City> getCityByName(String name) {
@@ -44,5 +41,12 @@ public class CityService {
         return Arrays.stream(pathVariable.split("\\s+"))
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
+    }
+
+    private List<City> pageAsList(Integer page, Integer size) {
+        Pageable paging = PageRequest.of(page, size);
+        Page<City> cities = repository.findAll(paging);
+
+        return cities.hasContent() ? cities.getContent() : new ArrayList<>();
     }
 }
