@@ -20,9 +20,11 @@ public class CityController {
     private CityService cityService;
 
     @GetMapping
-    public ResponseEntity<List<City>> getCities() {
-        List<City> cities = cityService.getAllCities();
-        return new ResponseEntity<>(cities, HttpStatus.OK);
+    public ResponseEntity<List<City>> getCities(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                                @RequestParam(required = false, defaultValue = "10") Integer size) {
+
+        List<City> list = cityService.getAllCities(page, size);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @GetMapping("/{cityName}")

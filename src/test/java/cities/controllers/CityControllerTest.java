@@ -57,7 +57,7 @@ class CityControllerTest {
 
     @Test
     public void getCities_returnsCitiesListWith3Items() throws Exception {
-        when(cityService.getAllCities()).thenReturn(cities);
+        when(cityService.getAllCities(0, 10)).thenReturn(cities);
 
         mockMvc.perform(get("/api/cities"))
                 .andExpect(status().isOk())
