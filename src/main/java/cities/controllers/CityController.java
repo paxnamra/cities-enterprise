@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,15 +20,21 @@ public class CityController {
     private CityService cityService;
 
     @GetMapping
-    public ResponseEntity<List<City>> getAllCities() {
-        List<City> cities = cityService.extractCities();
+    public ResponseEntity<List<City>> getCities() {
+        List<City> cities = cityService.getAllCities();
         return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 
     @GetMapping("/{cityName}")
-    public ResponseEntity<City> getCityByName(@PathVariable @NonNull String cityName) {
+    public ResponseEntity<City> getCity(@PathVariable @NonNull String cityName) {
         Optional<City> optionalCity = cityService.getCityByName(cityName);
         return optionalCity.map(city -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(city))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).build());
+    }
+
+    @PostMapping("/{cityName}/edit")
+    public ResponseEntity<City> updateCity(@PathVariable @NonNull String cityName, @RequestBody City updateCity) {
+        City cityToUpdate = cityService.updateCityNameAndImage(cityName, updateCity);
+        return new ResponseEntity<>(cityToUpdate, HttpStatus.OK);
     }
 }
