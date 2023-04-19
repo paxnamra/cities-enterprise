@@ -2,6 +2,8 @@ package cities.services;
 
 import cities.models.City;
 import cities.repositories.CityRepository;
+import cities.services.interfaces.ICityLoader;
+import cities.services.interfaces.ICityReader;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,10 +33,10 @@ class CityLoaderServiceTest {
     private CityRepository repository;
 
     @MockBean
-    private CityReaderService cityReaderService;
+    private ICityReader readerService;
 
     @Autowired
-    private CityLoaderService cityLoaderService;
+    private ICityLoader cityLoader;
 
     private List<City> cities;
 
@@ -57,9 +59,9 @@ class CityLoaderServiceTest {
         ));
 
         when(repository.saveAll(any(List.class))).thenReturn(cities);
-        when(cityReaderService.readCSVFrom(SMALL_DATASET)).thenReturn(cities);
+        when(readerService.readCitiesFrom(SMALL_DATASET)).thenReturn(cities);
 
-        cityLoaderService.loadCities(SMALL_DATASET);
+        cityLoader.loadCities(SMALL_DATASET);
 
         verify(repository, times(2)).saveAll(anyList());
         assertEquals(3, cities.size());

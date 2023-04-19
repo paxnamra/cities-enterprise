@@ -1,6 +1,7 @@
 package cities.services;
 
 import cities.models.City;
+import cities.services.interfaces.ICityReader;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -11,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CityReaderService {
-    public List<City> readCSVFrom(String filePath) throws IOException {
+public class CityReader implements ICityReader {
+    public List<City> readCitiesFrom(String filePath) throws IOException {
         List<City> cities = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))) {
