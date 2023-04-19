@@ -34,7 +34,7 @@ public class CityController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).build());
     }
 
-    @PostMapping("/{cityName}/edit")
+    @PutMapping("/{cityName}/edit")
     public ResponseEntity<City> updateCity(@PathVariable @NonNull String cityName, @RequestBody City updateCity) {
         City cityToUpdate = cityService.updateCityNameAndImage(cityName, updateCity);
         return new ResponseEntity<>(cityToUpdate, HttpStatus.OK);
