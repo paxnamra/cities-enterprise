@@ -2,6 +2,7 @@ package cities.services;
 
 import cities.models.City;
 import cities.repositories.CityRepository;
+import cities.services.interfaces.ICityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class CityService {
+public class CityService implements ICityService {
 
     @Autowired
     private CityRepository repository;

@@ -94,7 +94,7 @@ class CityControllerTest {
     }
 
     @Test
-    public void updateCity_changesNameAndImageOfTheCity() throws Exception {
+    public void updateCity_changesNameAndImageOfTheCity() {
         //TODO test to fix, probably some issue with mapper
 
 //        City cityData = new City(2L, "Tokyo", "https://example-of-the-city.com");
@@ -116,13 +116,13 @@ class CityControllerTest {
     }
 
     @Test
-    public void updateCity_changesCityNameWhenImageStaysTheSame() throws Exception {}
+    public void updateCity_changesCityNameWhenImageStaysTheSame() {}
 
     @Test
-    public void updateCity_changesCityNameIsEmptyString() throws Exception {}
+    public void updateCity_changesCityNameIsEmptyString() {}
 
     @Test
-    public void updateCity_changesCityNameWhenImageLinkIsEmpty() throws Exception {}
+    public void updateCity_changesCityNameWhenImageLinkIsEmpty() {}
 
     @Test
     public void updateCity_throwsExceptionIfCityNotFound() {}
