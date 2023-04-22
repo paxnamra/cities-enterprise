@@ -16,17 +16,17 @@ import java.util.List;
 @Service
 public class CityLoader implements ICityLoader {
     private static final String FILE_PATH = "src/main/resources/data/full_dataset_cities.csv";
-    private static final Logger logger = LoggerFactory.getLogger(CityLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CityLoader.class);
+
     @Autowired
     private CityRepository repository;
-
     @Autowired
     private ICityReader cityReader;
 
     @PostConstruct
     public void populateInDatabase() {
         loadCities(FILE_PATH);
-        logger.info("Successfully populated database with data.");
+        LOG.info("Successfully populated database with data.");
     }
 
     public void loadCities(String filePath) {
@@ -34,7 +34,7 @@ public class CityLoader implements ICityLoader {
             List<City> cities = cityReader.readCitiesFrom(filePath);
             repository.saveAll(cities);
         } catch (IOException errorMessage) {
-            logger.error("Missing cities file or wrong file under given filepath: " + errorMessage.getMessage());
+            LOG.error("Missing cities file or wrong file under given filepath: " + errorMessage.getMessage());
         }
     }
 }

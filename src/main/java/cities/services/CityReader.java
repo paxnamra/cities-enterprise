@@ -15,7 +15,8 @@ import java.util.List;
 
 @Service
 public class CityReader implements ICityReader {
-    private static final Logger logger = LoggerFactory.getLogger(CityReader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CityReader.class);
+
     public List<City> readCitiesFrom(String filePath) throws IOException {
         List<City> cities = new ArrayList<>();
 
@@ -35,7 +36,7 @@ public class CityReader implements ICityReader {
             }
         }
 
-        logger.info("Successfully read data from: {}", filePath);
+        LOG.info("Successfully read data from: {}", filePath);
         return cities;
     }
 }

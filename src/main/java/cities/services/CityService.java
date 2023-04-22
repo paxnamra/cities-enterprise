@@ -16,29 +16,27 @@ import java.util.stream.Collectors;
 
 @Service
 public class CityService implements ICityService {
-
-    private static final Logger logger = LoggerFactory.getLogger(CityService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CityService.class);
 
     @Autowired
     private CityRepository repository;
-
     public List<City> getAllCities(Integer page, Integer size) {
-        logger.info("getAllCities for {} page and {} size.", page, size);
+        LOG.info("getAllCities for {} page and {} size.", page, size);
         return pageAsList(page, size);
     }
 
     public Optional<City> getCityByName(String name) {
-        logger.info("getCityByName for {}. ", name);
+        LOG.info("getCityByName for {}. ", name);
         return repository.findCityByName(toTitleCase(name));
     }
 
     public City updateCityNameAndImage(String cityName, City newCityData) {
-        logger.info("updateCityNameAndImage for {} with new data {}. ", cityName, newCityData);
         Optional<City> optionalCity = getCityByName(cityName);
 
         if (optionalCity.isPresent()) {
             City cityToEdit = optionalCity.get();
             City editedCity = new City(cityToEdit.getId(), toTitleCase(newCityData.getName()), newCityData.getImageLink());
+            LOG.info("updateCityNameAndImage for {} with new data {}. ", cityName, newCityData);
             return repository.save(editedCity);
         } else {
             throw new NoSuchElementException("City not found");
