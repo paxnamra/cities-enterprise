@@ -5,6 +5,8 @@ import cities.repositories.CityRepository;
 import cities.services.interfaces.ICityLoader;
 import cities.services.interfaces.ICityReader;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.util.List;
 @Service
 public class CityLoader implements ICityLoader {
     private static final String FILE_PATH = "src/main/resources/data/full_dataset_cities.csv";
+    private static final Logger logger = LoggerFactory.getLogger(CityLoader.class);
     @Autowired
     private CityRepository repository;
 
@@ -23,6 +26,7 @@ public class CityLoader implements ICityLoader {
     @PostConstruct
     public void populateInDatabase() {
         loadCities(FILE_PATH);
+        logger.info("Successfully populated database with data.");
     }
 
     public void loadCities(String filePath) {
@@ -30,7 +34,7 @@ public class CityLoader implements ICityLoader {
             List<City> cities = cityReader.readCitiesFrom(filePath);
             repository.saveAll(cities);
         } catch (IOException errorMessage) {
-            System.err.println("Missing cities file or wrong file under given filepath: " + errorMessage.getMessage());
+            logger.error("Missing cities file or wrong file under given filepath: " + errorMessage.getMessage());
         }
     }
 }
