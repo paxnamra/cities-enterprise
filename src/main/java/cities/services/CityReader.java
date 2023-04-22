@@ -2,6 +2,8 @@ package cities.services;
 
 import cities.models.City;
 import cities.services.interfaces.ICityReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Service
 public class CityReader implements ICityReader {
+    private static final Logger LOG = LoggerFactory.getLogger(CityReader.class);
+
     public List<City> readCitiesFrom(String filePath) throws IOException {
         List<City> cities = new ArrayList<>();
 
@@ -32,6 +36,7 @@ public class CityReader implements ICityReader {
             }
         }
 
+        LOG.info("Successfully read data from: {}", filePath);
         return cities;
     }
 }
