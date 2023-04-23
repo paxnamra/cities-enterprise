@@ -14,12 +14,16 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * CityService service for managing the rest of city-related operations.
+ */
 @Service
 public class CityService implements ICityService {
     private static final Logger LOG = LoggerFactory.getLogger(CityService.class);
 
     @Autowired
     private CityRepository repository;
+
     public List<City> getAllCities(Integer page, Integer size) {
         LOG.info("getAllCities for {} page and {} size.", page, size);
         return pageAsList(page, size);
@@ -43,12 +47,25 @@ public class CityService implements ICityService {
         }
     }
 
+    /**
+     * Converts a string to title case.
+     *
+     * @param pathVariable String to be converted.
+     * @return String in title case.
+     */
     private String toTitleCase(String pathVariable) {
         return Arrays.stream(pathVariable.split("\\s+"))
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
     }
 
+    /**
+     * Retrieves a list of cities using the specified page and size parameters.
+     *
+     * @param page Integer representing the page number.
+     * @param size Integer representing the page size.
+     * @return List of City objects.
+     */
     private List<City> pageAsList(Integer page, Integer size) {
         Pageable paging = PageRequest.of(page, size);
         Page<City> cities = repository.findAll(paging);

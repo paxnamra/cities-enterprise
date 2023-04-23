@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * CityLoader service class for loading cities from a file and saving them to the repository.
+ */
 @Service
 public class CityLoader implements ICityLoader {
     private static final String FILE_PATH = "src/main/resources/data/full_dataset_cities.csv";
@@ -23,6 +26,9 @@ public class CityLoader implements ICityLoader {
     @Autowired
     private ICityReader cityReader;
 
+    /**
+     * Method called after the construction of the object to populate the database with city data.
+     */
     @PostConstruct
     public void populateInDatabase() {
         loadCities(FILE_PATH);

@@ -13,6 +13,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * CityReader service class for reading city data from a file.
+ */
 @Service
 public class CityReader implements ICityReader {
     private static final Logger LOG = LoggerFactory.getLogger(CityReader.class);
@@ -25,18 +28,28 @@ public class CityReader implements ICityReader {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] fields = line.split(",");
-
-                Long id = Long.parseLong(fields[0]);
-                String name = fields[1];
-                String imageLink = fields[2];
-
-                City city = new City(id, name, imageLink);
+                City city = parseCity(line);
                 cities.add(city);
             }
         }
 
         LOG.info("Successfully read data from: {}", filePath);
         return cities;
+    }
+
+    /**
+     * Parses a line from the city data file and creates a City object.
+     *
+     * @param line String representing a single line from the city data file.
+     * @return A City object created from the given line.
+     */
+    private City parseCity(String line) {
+        String[] fields = line.split(",");
+
+        Long id = Long.parseLong(fields[0]);
+        String name = fields[1];
+        String imageLink = fields[2];
+
+        return new City(id, name, imageLink);
     }
 }
