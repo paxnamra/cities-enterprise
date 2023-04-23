@@ -13,6 +13,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * CityReader service class for reading city data from a file.
+ */
 @Service
 public class CityReader implements ICityReader {
     private static final Logger LOG = LoggerFactory.getLogger(CityReader.class);
