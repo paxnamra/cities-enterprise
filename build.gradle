@@ -36,7 +36,19 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
-tasks.named('test') {
-    // Use JUnit Platform for unit tests.
+test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+//generate jacocoTestReport manually for now
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.10"
 }
