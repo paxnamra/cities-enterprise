@@ -31,8 +31,9 @@ public class CityLoader implements ICityLoader {
      */
     @PostConstruct
     public void populateInDatabase() {
+        LOG.info("Populating database... ");
         loadCities(FILE_PATH);
-        LOG.info("Successfully populated database with data.");
+        LOG.info("Successfully populated database with given data.");
     }
 
     public void loadCities(String filePath) {
