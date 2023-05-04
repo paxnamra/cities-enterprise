@@ -18,16 +18,20 @@ import java.util.List;
  */
 @Service
 public class CityReader implements ICityReader {
+    private static final String CSV_HEADERS = "id,name,photo";
     private static final Logger LOG = LoggerFactory.getLogger(CityReader.class);
 
     public List<City> readCitiesFrom(String filePath) throws IOException {
         List<City> cities = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))) {
-            reader.readLine();
 
             String line;
             while ((line = reader.readLine()) != null) {
+                if (line.equals(CSV_HEADERS)) {
+                    continue;
+                }
+
                 City city = parseCity(line);
                 cities.add(city);
             }
