@@ -38,12 +38,12 @@ class CityLoaderServiceTest {
     private List<City> cities;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         cities = new ArrayList<>();
     }
 
     @AfterEach
-    public void clear() {
+    void clear() {
         cities.clear();
     }
 

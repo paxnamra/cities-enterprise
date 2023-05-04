@@ -40,7 +40,7 @@ class CityControllerTest {
     private List<City> cities;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         cities = new ArrayList<>();
 
         cities.addAll(List.of(
@@ -51,12 +51,12 @@ class CityControllerTest {
     }
 
     @AfterEach
-    public void clear() {
+    void clear() {
         cities.clear();
     }
 
     @Test
-    public void getCities_returnsCitiesListWith3Items() throws Exception {
+    void getCities_returnsCitiesListWith3Items() throws Exception {
         when(cityService.getAllCities(0, 10)).thenReturn(cities);
 
         mockMvc.perform(get("/api/cities"))
@@ -69,7 +69,7 @@ class CityControllerTest {
     }
 
     @Test
-    public void getCity_returnsRequestedCity() throws Exception {
+    void getCity_returnsRequestedCity() throws Exception {
         City city = cities.get(1);
         String tokyo = city.getName();
 
@@ -84,7 +84,7 @@ class CityControllerTest {
     }
 
     @Test
-    public void getCity_returnsNotFoundStatus() throws Exception {
+    void getCity_returnsNotFoundStatus() throws Exception {
         String cityName = "San Escobar";
         when(cityService.getCityByName(cityName)).thenReturn(Optional.empty());
 
@@ -94,8 +94,8 @@ class CityControllerTest {
     }
 
     @Test
-    public void updateCity_changesNameAndImageOfTheCity() {
-        //TODO test to fix, probably some issue with mapper
+    void updateCity_changesNameAndImageOfTheCity() {
+        //TODO test to fix, probably some islsue with mapper
 
 //        City cityData = new City(2L, "Tokyo", "https://example-of-the-city.com");
 //        City updatedCityData = new City(2L, "Neo Tokyo", "https://scandroid.com");
@@ -116,14 +116,14 @@ class CityControllerTest {
     }
 
     @Test
-    public void updateCity_changesCityNameWhenImageStaysTheSame() {}
+    void updateCity_changesCityNameWhenImageStaysTheSame() {}
 
     @Test
-    public void updateCity_changesCityNameIsEmptyString() {}
+    void updateCity_changesCityNameIsEmptyString() {}
 
     @Test
-    public void updateCity_changesCityNameWhenImageLinkIsEmpty() {}
+    void updateCity_changesCityNameWhenImageLinkIsEmpty() {}
 
     @Test
-    public void updateCity_throwsExceptionIfCityNotFound() {}
+    void updateCity_throwsExceptionIfCityNotFound() {}
 }
