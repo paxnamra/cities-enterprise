@@ -59,10 +59,9 @@ class CityControllerTest {
 
     @Test
     void getCities_returnsCitiesListWith3Items() throws Exception {
-        when(cityService.getAllCities(eq(0), eq(10))).thenReturn(cities);
+        when(cityService.getAllCities(0, 10)).thenReturn(cities);
 
         mockMvc.perform(get("/api/cities"))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -76,10 +75,9 @@ class CityControllerTest {
         City city = cities.get(1);
         String tokyo = city.getName();
 
-        when(cityService.getCityByName(eq(tokyo))).thenReturn(Optional.of(city));
+        when(cityService.getCityByName(tokyo)).thenReturn(Optional.of(city));
 
         mockMvc.perform(get("/api/cities/{cityName}", city.getName()))
-                .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(city.getId()))
