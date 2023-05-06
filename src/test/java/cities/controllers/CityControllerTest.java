@@ -2,16 +2,15 @@ package cities.controllers;
 
 import cities.models.City;
 import cities.services.CityService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -19,11 +18,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 class CityControllerTest {
@@ -31,11 +33,11 @@ class CityControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private CityService cityService;
-
-//    @MockBean
-//    private ObjectMapper objectMapper;
 
     private List<City> cities;
 
@@ -60,6 +62,7 @@ class CityControllerTest {
         when(cityService.getAllCities(0, 10)).thenReturn(cities);
 
         mockMvc.perform(get("/api/cities"))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -76,6 +79,7 @@ class CityControllerTest {
         when(cityService.getCityByName(tokyo)).thenReturn(Optional.of(city));
 
         mockMvc.perform(get("/api/cities/{cityName}", city.getName()))
+                .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(city.getId()))
@@ -94,36 +98,19 @@ class CityControllerTest {
     }
 
     @Test
-    void updateCity_changesNameAndImageOfTheCity() {
-        //TODO test to fix, probably some islsue with mapper
+    void updateCity_changesNameAndImageOfTheCity() throws Exception {
+        City updatedCityData = new City(2L, "Neotokyo", "https://scandroid.com");
+        String cityName = "Tokyo";
 
-//        City cityData = new City(2L, "Tokyo", "https://example-of-the-city.com");
-//        City updatedCityData = new City(2L, "Neo Tokyo", "https://scandroid.com");
+        when(cityService.updateCityNameAndImage(eq(cityName), any())).thenReturn(updatedCityData);
 
-        //objectMapper = new ObjectMapper();
-
-//        when(cityService.getCityByName(cityData.getName())).thenReturn(Optional.of(cityData));
-//        when(cityService.updateCityNameAndImage(cityData.getName(), updatedCityData)).thenReturn(updatedCityData);
-//
-//        mockMvc.perform(post("/{cityName}/edit", cityData.getName())
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON)
-//                        .content(new ObjectMapper().writeValueAsString(updatedCityData)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(2))
-//                .andExpect(jsonPath("$.name").value("Neo Tokyo"))
-//                .andExpect(jsonPath("$.imageLink").value("https://scandroid.com"));
+        mockMvc.perform(put("/api/cities/{cityName}/edit", cityName)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedCityData)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2))
+                .andExpect(jsonPath("$.name").value("Neotokyo"))
+                .andExpect(jsonPath("$.imageLink").value("https://scandroid.com"));
     }
 
-    @Test
-    void updateCity_changesCityNameWhenImageStaysTheSame() {}
-
-    @Test
-    void updateCity_changesCityNameIsEmptyString() {}
-
-    @Test
-    void updateCity_changesCityNameWhenImageLinkIsEmpty() {}
-
-    @Test
-    void updateCity_throwsExceptionIfCityNotFound() {}
 }
