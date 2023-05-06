@@ -59,7 +59,7 @@ class CityControllerTest {
 
     @Test
     void getCities_returnsCitiesListWith3Items() throws Exception {
-        when(cityService.getAllCities(0, 10)).thenReturn(cities);
+        when(cityService.getAllCities(eq(0), eq(10))).thenReturn(cities);
 
         mockMvc.perform(get("/api/cities"))
                 .andDo(print())
@@ -76,7 +76,7 @@ class CityControllerTest {
         City city = cities.get(1);
         String tokyo = city.getName();
 
-        when(cityService.getCityByName(tokyo)).thenReturn(Optional.of(city));
+        when(cityService.getCityByName(eq(tokyo))).thenReturn(Optional.of(city));
 
         mockMvc.perform(get("/api/cities/{cityName}", city.getName()))
                 .andDo(print())
