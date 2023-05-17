@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Service
 public class CityLoader implements ICityLoader {
-    private static final String FILE_PATH = "src/main/resources/data/full_";
+    private static final String FILE_PATH = "src/main/resources/data/full_dataset_cities.csv";
     private static final Logger LOG = LoggerFactory.getLogger(CityLoader.class);
 
     @Autowired
@@ -33,13 +33,13 @@ public class CityLoader implements ICityLoader {
     public void populateInDatabase() {
         LOG.info("Populating database... ");
         loadCities(FILE_PATH);
-        LOG.info("Successfully populated database with given data.");
     }
 
     public void loadCities(String filePath) {
         try {
             List<City> cities = cityReader.readCitiesFrom(filePath);
             repository.saveAll(cities);
+            LOG.info("Successfully populated database with given data.");
         } catch (IOException errorMessage) {
             LOG.error(String.format("%s - Missing cities file or wrong file under given filepath: %s", errorMessage, errorMessage.getMessage()));
         }
